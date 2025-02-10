@@ -124,16 +124,40 @@ export default function ProductPage({ product }) {
   )
 }
 
+// Add static paths if needed
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: 'blocking'
+  };
+}
+
+// Update getServerSideProps to use edge
 export async function getServerSideProps({ params }) {
   try {
-    const res = await fetch(`http://localhost:3000/api/products/${params.id}`);
+    const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_D1_ACCOUNT_ID}/d1/database/${process.env.CLOUDFLARE_D1_DATABASE_ID}/query`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.CLOUDFLARE_D1_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sql: 'SELECT * FROM products WHERE id = ?',
+        params: [params.id]
+      })
+    });
+
+    const data = await response.json();
     
-    if (!res.ok) {
+    if (!response.ok) {
       return { notFound: true };
     }
 
-    const product = await res.json();
-    return { props: { product } };
+    return { 
+      props: { 
+        product: data.result[0] || null 
+      } 
+    };
   } catch (error) {
     console.error("Error fetching product:", error);
     return { notFound: true };
