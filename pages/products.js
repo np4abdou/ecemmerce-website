@@ -21,9 +21,7 @@ export default function Products() {
       <div className="mb-8 flex flex-wrap gap-4">
         <button
           onClick={() => setSelectedCategory("all")}
-          className={`px-4 py-2 rounded-full ${
-            selectedCategory === "all" ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"
-          }`}
+          className={`px-4 py-2 rounded-full ${selectedCategory === "all" ? "bg-primary text-white" : "bg-gray-200 text-gray-800"}`}
         >
           All
         </button>
@@ -31,9 +29,7 @@ export default function Products() {
           <button
             key={category.id}
             onClick={() => setSelectedCategory(category.id)}
-            className={`px-4 py-2 rounded-full ${
-              selectedCategory === category.id ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"
-            }`}
+            className={`px-4 py-2 rounded-full ${selectedCategory === category.id ? "bg-primary text-white" : "bg-gray-200 text-gray-800"}`}
           >
             {category.name}
           </button>
@@ -43,18 +39,18 @@ export default function Products() {
       {/* Product Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {filteredProducts.map((product) => (
-          <div key={product.id} className="bg-card text-card-foreground shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+          <div key={product.id} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
             <img src={product.image || "/placeholder.svg"} alt={product.name} className="w-full h-64 object-cover" />
             <div className="p-6">
               <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
-              <p className="text-muted-foreground mb-4">{product.description}</p>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">{product.description}</p>
               <div className="flex justify-between items-center">
-                <span className="text-2xl font-bold text-primary">
-                  {product.price}
+                <span className="text-2xl font-bold text-primary dark:text-secondary">
+                  {product.price.toLocaleString()} DHs
                 </span>
                 <Link
                   href={`/products/${product.id}`}
-                  className="bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90 transition-colors"
+                  className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors"
                 >
                   View Details
                 </Link>
@@ -66,3 +62,4 @@ export default function Products() {
     </div>
   )
 }
+
