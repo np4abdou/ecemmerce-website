@@ -1,0 +1,39 @@
+import { createClient } from '@cloudflare/d1';
+
+const db = createClient({
+  accountId: process.env.CLOUDFLARE_D1_ACCOUNT_ID,
+  databaseId: process.env.CLOUDFLARE_D1_DATABASE_ID,
+  token: process.env.CLOUDFLARE_D1_TOKEN,
+});
+
+export default async function handler(req, res) {
+  if (req.method === 'GET') {
+    try {
+      // Fetch all orders from the D1 database
+      const { results: orders } = await db.query('SELECT * FROM orders');
+      res.status(200).json(orders);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      res.status(500).json({ message: 'Error fetching orders' });
+    }
+  } else if (req.method === 'POST') {
+    try {
+      const { productId, productName, size, fullName, phone, city, price, date } = req.body;
+
+      // Insert the new order into the orders table in D1
+      const query = `
+        INSERT INTO orders (productId, productName, size, fullName, phone, city, price, date)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+      await db.query(query, [productId, productName, size, fullName, phone, city, price, date]);
+
+      res.status(201).json({ message: 'Order added successfully' });
+    } catch (error) {
+      console.error('Error adding order:', error);
+      res.status(500).json({ message: 'Error adding order' });
+    }
+  } else {
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+}
