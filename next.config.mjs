@@ -1,6 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-};
+  output: "export",
+  images: {
+    unoptimized: true,
+  },
+  // This is important for Cloudflare Pages
+  trailingSlash: true,
+}
 
-export default nextConfig;
+module.exports = nextConfig
+
