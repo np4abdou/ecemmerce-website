@@ -9,8 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "pages:build": "npx @cloudflare/next-on-pages@1",
-    "deploy": "wrangler pages deploy .vercel/output/static"
+    "pages:build": "npx @cloudflare/next-on-pages@1"
   },
   "dependencies": {
     "lucide-react": "^0.475.0",
