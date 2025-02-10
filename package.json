@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "next build && wrangler pages deploy .next"
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static"
   },
   "dependencies": {
     "@cloudflare/d1": "^1.4.1",
