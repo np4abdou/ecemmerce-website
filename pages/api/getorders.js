@@ -1,27 +1,36 @@
 import { createClient } from "@cloudflare/d1";
 
-const db = createClient({
-  accountId: process.env.CLOUDFLARE_D1_ACCOUNT_ID,
-  databaseId: process.env.CLOUDFLARE_D1_DATABASE_ID,
-  token: process.env.CLOUDFLARE_D1_TOKEN,
-});
+export const runtime = 'edge';
 
-export default async function handler(req, res) {
+export default async function handler(req) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    return new Response(JSON.stringify({ message: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   try {
-    const { productId, productName, size, fullName, phone, city, price, date } = req.body;
+    const { productId, productName, size, fullName, phone, city, price, date } = await req.json();
 
-    await db.query(`
-      INSERT INTO orders (productId, productName, size, fullName, phone, city, price, date)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `, [productId, productName, size, fullName, phone, city, price, date]);
+    // In Cloudflare Pages, DB is automatically bound
+    const stmt = await DB.prepare(
+      `INSERT INTO orders (productId, productName, size, fullName, phone, city, price, date)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+    );
 
-    res.status(200).json({ message: "Order placed successfully" });
+    await stmt.bind(productId, productName, size, fullName, phone, city, price, date);
+    await stmt.run();
+
+    return new Response(JSON.stringify({ message: "Order placed successfully" }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (error) {
     console.error("Error placing order:", error);
-    res.status(500).json({ message: "Error placing order" });
+    return new Response(JSON.stringify({ message: "Error placing order" }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }

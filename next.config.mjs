@@ -5,34 +5,10 @@ const nextConfig = {
     unoptimized: true,
   },
   experimental: {
+    runtime: 'edge',
     serverActions: {
       bodySizeLimit: '2mb',
     },
-  },
-  webpack: (config, { isServer }) => {
-    // Add TypeScript loader
-    config.module.rules.push({
-      test: /\.ts$/,
-      use: [{
-        loader: 'ts-loader',
-        options: {
-          transpileOnly: true
-        }
-      }]
-    });
-
-    // Handle Cloudflare Workers environment
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-        crypto: false,
-      };
-    }
-
-    return config;
   },
   trailingSlash: true
 };

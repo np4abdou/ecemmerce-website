@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Order, D1Response } from '../../types/tables';
 
