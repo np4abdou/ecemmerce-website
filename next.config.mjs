@@ -4,9 +4,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // This is important for Cloudflare Pages
   trailingSlash: true,
-}
+};
 
-module.exports = nextConfig
-
+export default nextConfig; // <-- Use ES module export
