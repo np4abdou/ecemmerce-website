@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+export const runtime = 'edge';
+
 export default function ProductPage({ product }) {
   const router = useRouter();
   const [selectedSize, setSelectedSize] = useState("");

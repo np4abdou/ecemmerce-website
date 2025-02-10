@@ -6,3 +6,6 @@ pages_build_output_dir = ".vercel/output/static"
 binding = "DB"
 database_name = "client-details2"
 database_id = "b58b78b2-4740-42e1-899d-df12d554d6e4"
+
+[build]
+command = "npm run pages:build"
