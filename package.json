@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "18.18.0"
+    "node": "18"
   },
   "scripts": {
     "dev": "next dev",
-    "build": "npx @cloudflare/next-on-pages",
+    "build": "next build",
     "start": "next start",
-    "pages:build": "npx @cloudflare/next-on-pages",
-    "deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static"
+    "pages:build": "npx @cloudflare/next-on-pages@1",
+    "deploy": "wrangler pages deploy .vercel/output/static"
   },
   "dependencies": {
     "lucide-react": "^0.475.0",

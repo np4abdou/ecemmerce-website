@@ -5,12 +5,8 @@ const nextConfig = {
     unoptimized: true,
   },
   experimental: {
-    runtime: 'edge',
-    serverActions: {
-      bodySizeLimit: '2mb',
-    },
-  },
-  trailingSlash: true
+    runtime: 'edge'
+  }
 };
 
 export default nextConfig;
