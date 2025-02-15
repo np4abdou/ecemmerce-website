@@ -4,6 +4,9 @@ import { useState, useEffect } from "react"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 import "../styles/globals.css"
+import { Montserrat } from "next/font/google"
+
+const montserrat = Montserrat({ subsets: ["latin"] })
 
 export default function App({ Component, pageProps }) {
   const [darkMode, setDarkMode] = useState(false)
@@ -17,7 +20,7 @@ export default function App({ Component, pageProps }) {
   }, [darkMode])
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className={`min-h-screen flex flex-col ${montserrat.className}`}>
       <Header darkMode={darkMode} setDarkMode={setDarkMode} />
       <main className="flex-grow pb-16 bg-background text-foreground">
         <div className="container mx-auto px-4 py-8">

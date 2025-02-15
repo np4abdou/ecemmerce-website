@@ -1,0 +1,8 @@
+name = "order-worker2025"
+main = "index.ts"
+compatibility_date = "2023-05-18"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "database1"
+database_id = "2d3a650f-a72b-4d63-ba43-5bdf41e7239f"

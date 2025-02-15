@@ -6,13 +6,20 @@ export const products = [
     description: "Stylish black shirt with anime character design",
     image: "/images/shirt.png",
     category: "anime",
+  },
+  {
+    id: 2,
+    name: "Hoodie",
+    price: 50,
+    description: "Stylish black hoodie with anime character design",
+    image: "/images/hoodie-bac.png",
+    category: "anime",
   }
-]
+];
 
 export const categories = [
   { id: "anime", name: "Anime" },
   { id: "gym", name: "Gym" },
   { id: "matchy-matchy", name: "Matchy Matchy" },
   { id: "movies", name: "Movies" },
-]
-
+];
