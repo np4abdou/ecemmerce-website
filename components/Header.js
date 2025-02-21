@@ -150,7 +150,7 @@ export default function Header() {
                 </div>
               </Link>
               <nav className="hidden md:flex items-center ml-8 space-x-6">
-                {["HOME", "CATEGORIES", "CONTACT"].map((item) => (
+                {["HOME", "PRODUCTS", "ART", "CONTACT"].map((item) => (
                   <motion.div key={item} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link
                       href={item === "HOME" ? "/" : `/${item.toLowerCase()}`}
@@ -221,10 +221,8 @@ export default function Header() {
       </header>
 
       {/* Spacer to prevent content overlap */}
-      <div
-        className="transition-all duration-300"
-        style={{ height: showBanner ? "calc(4rem + 2.5rem)" : "4rem" }}
-      />
+      <div className="transition-all duration-300" style={{ height: showBanner ? "calc(4rem + 2.5rem)" : "4rem" }} />
     </div>
   )
 }
+

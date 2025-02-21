@@ -1,15 +1,15 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Facebook, Instagram, PhoneIcon, Mail, MapPin, Clock } from "lucide-react"
+import { Facebook, Instagram, PhoneIcon, Mail, MapPin, Clock } from 'lucide-react'
 import Image from "next/image"
-import { useTheme } from "next-themes"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import { useCookies } from "react-cookie"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
-  const { resolvedTheme } = useTheme()
+  const [cookies] = useCookies(["theme"])
   const [mounted, setMounted] = useState(false)
 
   // Ensure the component is mounted to avoid hydration mismatch
@@ -50,13 +50,11 @@ export default function Footer() {
               {mounted && (
                 <div className="relative w-[140px] h-[35px]">
                   <Image
-                    src="/images/logo.png" // Use a single logo file
+                    src={`/images/logo${cookies.theme === "dark" ? "2" : ""}.png`}
                     alt="TechEmirate Logo"
                     layout="fill"
                     objectFit="contain"
-                    className={`hover:scale-105 transition-transform duration-300 ${
-                      resolvedTheme === "dark" ? "invert" : ""
-                    }`}
+                    className="hover:scale-105 transition-transform duration-300"
                   />
                 </div>
               )}
@@ -71,7 +69,7 @@ export default function Footer() {
             <h4 className="font-semibold text-lg mb-6">Contact Info</h4>
             <ul className="space-y-4">
               {contactItems.map((item, index) => (
-                <motion.li 
+                <motion.li
                   key={index}
                   whileHover={{ x: 5 }}
                   className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
@@ -88,14 +86,8 @@ export default function Footer() {
             <h4 className="font-semibold text-lg mb-6">Quick Links</h4>
             <ul className="space-y-4">
               {footerLinks.map((link, index) => (
-                <motion.li 
-                  key={index}
-                  whileHover={{ x: 5 }}
-                >
-                  <Link
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                  >
+                <motion.li key={index} whileHover={{ x: 5 }}>
+                  <Link href={link.href} className="text-muted-foreground hover:text-primary transition-colors text-sm">
                     {link.title}
                   </Link>
                 </motion.li>
@@ -125,9 +117,7 @@ export default function Footer() {
         {/* Copyright Section */}
         <div className="border-t border-border pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-muted-foreground">
-            <p className="text-sm text-center">
-              © {currentYear} TechEmirate. All rights reserved.
-            </p>
+            <p className="text-sm text-center">© {currentYear} TechEmirate. All rights reserved.</p>
             <div className="flex space-x-4">
               <Link href="/privacy" className="text-sm hover:text-primary transition-colors">
                 Privacy Policy

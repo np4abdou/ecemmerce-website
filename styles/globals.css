@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 @import url("https://fonts.googleapis.com/css2?family=Jockey+One&display=swap");
-
 @import "https://unpkg.com/open-props/easings.min.css";
 
 :root {
+  /* Custom Variables */
   --text-color: hsla(210, 50%, 85%, 1);
   --shadow-color: hsla(32, 94%, 61%, 0.4);
   --btn-color: #f59a38;
@@ -15,6 +15,7 @@
   --shimmer-duration: 8s;
   --wave-color: rgba(255, 255, 255, 0.2);
 
+  /* Shimmer Variables */
   --shimmer-hue-1: 213deg;
   --shimmer-sat-1: 95%;
   --shimmer-lit-1: 91%;
@@ -25,6 +26,7 @@
   --shimmer-sat-3: 78%;
   --shimmer-lit-3: 89%;
 
+  /* Animation Variables */
   --glow-hue: 222deg;
   --shadow-hue: 180deg;
   --spring-duration: 1.33s;
@@ -100,8 +102,7 @@
   }
 }
 
-
-
+/* Hero Button Styles */
 .hero-button {
   position: relative;
   padding: 16px 32px;
@@ -134,10 +135,7 @@
   filter: brightness(0.9);
 }
 
-.text-theme {
-  @apply text-foreground;
-}
-
+/* Theme Toggle Styles */
 .theme-toggle {
   --size: 2.5rem;
   --icon-fill: hsl(210, 10%, 30%);
@@ -245,7 +243,7 @@
   }
 }
 
-/* Search bar styles */
+/* Search Bar Styles */
 .search {
   position: relative;
   width: 2.5rem;
@@ -290,18 +288,25 @@
   width: 2.5rem;
   height: 2.5rem;
   border: none;
-  background-color: var(--btn-color);
-  border-radius: 50%;
+  background-color: transparent;
   display: grid;
   place-items: center;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: opacity 0.3s ease;
+}
+
+.search-btn:hover {
+  opacity: 0.7;
 }
 
 .search-icon {
-  color: hsl(var(--primary-foreground));
+  color: hsl(var(--foreground));
   font-size: 1.25rem;
   transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.search.active .search-icon {
+  color: var(--btn-color);
 }
 
 .search-glass,
@@ -321,7 +326,7 @@
   transform: rotate(0);
 }
 
-/* Animated Button CSS */
+/* Animated Button Styles */
 .animated-button {
   position: relative;
   padding: 16px 32px;
@@ -386,7 +391,7 @@
   overflow: hidden;
 }
 
-/* Updated Floating Image Styles: Vertical Movement, Increased Amplitude & Faster (3s) */
+/* Floating Image Animation */
 .animated-button .floating-image {
   position: absolute;
   width: 20px;
@@ -413,20 +418,20 @@
   box-shadow: 0 0 30px var(--btn-glow-color);
 }
 
-/* Small Shop Now Button - Updated to a Pill Shape with Glowing Shiny Text */
+/* Shop Now Button Styles */
 .shop-now-small {
   display: inline-block;
   background-color: rgb(12, 0, 0);
   padding: 9px 9px;
-  border-radius: 4px; /* Less rounded than before */
+  border-radius: 4px;
   color: white;
-  font-size: 17x;
+  font-size: 17px;
   font-weight: bold;
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
   text-decoration: none;
   text-align: center;
-  width: 100%; /* Full width */
+  width: 100%;
 }
 
 .shop-now-small:hover {
@@ -434,7 +439,7 @@
   transform: scale(1.05);
 }
 
-/* Shiny Text Animation for Button Text */
+/* Shiny Text Animation */
 .shiny-text {
   color: #ffffffa4;
   background: linear-gradient(
@@ -462,3 +467,9 @@
 .shiny-text.disabled {
   animation: none;
 }
+
+/* Utility Classes */
+.text-theme {
+  @apply text-foreground;
+}
+
