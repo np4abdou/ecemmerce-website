@@ -4,7 +4,9 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { ChevronDown } from "lucide-react"
-import { products, categories } from "../data/products"
+import { products, categories } from "../config/products"
+import { images } from "../config/images"
+import Image from "next/image"
 
 export default function Products() {
   const router = useRouter()
@@ -14,9 +16,14 @@ export default function Products() {
   const [sortBy, setSortBy] = useState("newest")
   const [priceRange, setPriceRange] = useState([0, 1000])
   const [isLoaded, setIsLoaded] = useState(false)
+  const [discount, setDiscount] = useState({ active: false, amount: 0, code: "" })
 
   useEffect(() => {
     setIsLoaded(true)
+    const savedDiscount = localStorage.getItem("discount")
+    if (savedDiscount) {
+      setDiscount(JSON.parse(savedDiscount))
+    }
   }, [])
 
   const filteredProducts = products
@@ -48,21 +55,19 @@ export default function Products() {
         {/* Filters and Search */}
         <div className="mb-8 space-y-4">
           <div className="flex flex-col md:flex-row gap-4">
-            {/* Search Input */}
             <input
               type="text"
               placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1 p-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              className="flex-1 p-3 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-foreground placeholder-muted-foreground/70"
             />
 
-            {/* Sort Dropdown */}
             <div className="relative">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="appearance-none w-full md:w-48 p-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary pr-10"
+                className="appearance-none w-full md:w-48 p-3 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary pr-10 text-foreground"
               >
                 <option value="newest">Newest</option>
                 <option value="price-low">Price: Low to High</option>
@@ -72,14 +77,13 @@ export default function Products() {
             </div>
           </div>
 
-          {/* Category Filters */}
           <div className="flex flex-wrap gap-4 justify-center">
             <button
               onClick={() => setSelectedCategory("all")}
               className={`px-6 py-2 rounded-full transition-colors ${
                 selectedCategory === "all"
                   ? "bg-primary text-primary-foreground"
-                  : "bg-accent text-accent-foreground hover:bg-accent/80"
+                  : "bg-card text-muted-foreground hover:bg-muted/80"
               }`}
             >
               All
@@ -91,7 +95,7 @@ export default function Products() {
                 className={`px-6 py-2 rounded-full transition-colors ${
                   selectedCategory === category.id
                     ? "bg-primary text-primary-foreground"
-                    : "bg-accent text-accent-foreground hover:bg-accent/80"
+                    : "bg-card text-muted-foreground hover:bg-muted/80"
                 }`}
               >
                 {category.name}
@@ -100,8 +104,7 @@ export default function Products() {
           </div>
         </div>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((product, index) => (
             <div
               key={product.id}
@@ -115,14 +118,23 @@ export default function Products() {
                 className="group block bg-card text-card-foreground rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
               >
                 <div className="relative aspect-square overflow-hidden">
-                  <img
-                    src={product.image || "/placeholder.svg"}
+                  <Image
+                    src={product.mainImage || images.products.placeholder}
                     alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    layout="fill"
+                    objectFit="cover"
+                    className="transition-transform duration-500 group-hover:scale-110"
                   />
                   {product.isNew && (
                     <div className="absolute top-4 left-4">
                       <span className="bg-black text-white px-3 py-1 text-sm font-semibold rounded">NEW</span>
+                    </div>
+                  )}
+                  {discount.active && (
+                    <div className="absolute top-4 right-4">
+                      <span className="bg-red-500 text-white px-3 py-1 text-sm font-semibold rounded">
+                        {discount.amount}% OFF
+                      </span>
                     </div>
                   )}
                 </div>
@@ -130,7 +142,18 @@ export default function Products() {
                   <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
                   <p className="text-muted-foreground mb-4">{product.description}</p>
                   <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-primary">{product.price.toLocaleString()} DHs</span>
+                    <span className="text-2xl font-bold text-primary">
+                      {discount.active ? (
+                        <>
+                          <span className="line-through text-muted-foreground mr-2">
+                            {product.price.toLocaleString()} DHs
+                          </span>
+                          {(product.price * (1 - discount.amount / 100)).toFixed(2)} DHs
+                        </>
+                      ) : (
+                        `${product.price.toLocaleString()} DHs`
+                      )}
+                    </span>
                   </div>
                 </div>
               </Link>

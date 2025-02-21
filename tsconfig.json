@@ -23,13 +23,19 @@
         "./*"
       ]
     },
-    "incremental": true
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
-  ],
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+, "worker2/index.js", "worker2/index.js", "pages/api/validate-token.js"  ],
   "exclude": [
     "node_modules"
   ]

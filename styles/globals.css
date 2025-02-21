@@ -2,67 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Jockey+One&display=swap");
+
+@import "https://unpkg.com/open-props/easings.min.css";
+
+:root {
+  --text-color: hsla(210, 50%, 85%, 1);
+  --shadow-color: hsla(32, 94%, 61%, 0.4);
+  --btn-color: #f59a38;
+  --bg-color: #141218;
+  --btn-glow-color: rgba(245, 154, 56, 0.5);
+  --shimmer-duration: 8s;
+  --wave-color: rgba(255, 255, 255, 0.2);
+
+  --shimmer-hue-1: 213deg;
+  --shimmer-sat-1: 95%;
+  --shimmer-lit-1: 91%;
+  --shimmer-hue-2: 248deg;
+  --shimmer-sat-2: 100%;
+  --shimmer-lit-2: 86%;
+  --shimmer-hue-3: 293deg;
+  --shimmer-sat-3: 78%;
+  --shimmer-lit-3: 89%;
+
+  --glow-hue: 222deg;
+  --shadow-hue: 180deg;
+  --spring-duration: 1.33s;
+  --wave-duration: 2s;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-
+    --foreground: 0 0% 13%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-
+    --card-foreground: 0 0% 13%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-
+    --popover-foreground: 0 0% 13%;
     --primary: 24 100% 50%;
     --primary-foreground: 0 0% 98%;
-
     --secondary: 60 100% 50%;
-    --secondary-foreground: 0 0% 9%;
-
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 24 100% 50%;
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 60 100% 50%;
-    --secondary-foreground: 0 0% 9%;
-
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-
+    --secondary-foreground: 0 0% 13%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 13%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89%;
+    --input: 0 0% 89%;
+    --ring: 0 0% 13%;
+    --radius: 0.5rem;
+    --icon-fill: hsl(210, 10%, 30%);
+    --icon-fill-hover: hsl(210, 10%, 15%);
+  }
 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+  [data-theme="dark"] {
+    --background: 0 0% 6%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 24 100% 50%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 60 100% 50%;
+    --secondary-foreground: 0 0% 6%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 10%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 10%;
+    --input: 0 0% 10%;
+    --ring: 0 0% 65%;
+    --icon-fill: hsl(210, 10%, 70%);
+    --icon-fill-hover: hsl(210, 15%, 90%);
   }
 }
 
@@ -71,6 +87,378 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground transition-colors duration-300;
+    font-family: "Jockey One", sans-serif;
   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Jockey One", sans-serif;
+  }
+}
+
+
+
+.hero-button {
+  position: relative;
+  padding: 16px 32px;
+  border: none;
+  cursor: pointer;
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 20px;
+  letter-spacing: 2px;
+  background-color: var(--btn-color);
+  box-shadow: 0 0 15px var(--btn-color);
+  border-radius: 50px;
+  z-index: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: white;
+}
+
+[data-theme="dark"] .hero-button {
+  color: black;
+}
+
+.hero-button:hover {
+  box-shadow: 0 0 30px var(--btn-color);
+  filter: brightness(0.9);
+}
+
+.text-theme {
+  @apply text-foreground;
+}
+
+.theme-toggle {
+  --size: 2.5rem;
+  --icon-fill: hsl(210, 10%, 30%);
+  --icon-fill-hover: hsl(210, 10%, 15%);
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  inline-size: var(--size);
+  block-size: var(--size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  outline-offset: 5px;
+}
+
+.theme-toggle > svg {
+  inline-size: 100%;
+  block-size: 100%;
+  stroke-linecap: round;
+  font-size: 1.5rem;
+}
+
+[data-theme="dark"] .theme-toggle {
+  --icon-fill: hsl(210, 10%, 70%);
+  --icon-fill-hover: hsl(210, 15%, 90%);
+}
+
+.sun-and-moon > :is(.moon, .sun, .sun-beams) {
+  transform-origin: center center;
+}
+
+.sun-and-moon > :is(.moon, .sun) {
+  fill: var(--icon-fill);
+}
+
+.theme-toggle:is(:hover, :focus-visible) > .sun-and-moon > :is(.moon, .sun) {
+  fill: var(--icon-fill-hover);
+}
+
+.sun-and-moon > .sun-beams {
+  stroke: var(--icon-fill);
+  stroke-width: 2px;
+}
+
+.theme-toggle:is(:hover, :focus-visible) .sun-and-moon > .sun-beams {
+  stroke: var(--icon-fill-hover);
+}
+
+.sun-and-moon .sun {
+  transition: transform 0.5s cubic-bezier(0.5, 1.5, 0.75, 1.25);
+}
+
+.sun-and-moon .sun-beams {
+  transition: transform 0.5s cubic-bezier(0.5, 1.5, 0.75, 1.25), opacity 0.5s cubic-bezier(0.25, 0, 0.3, 1);
+}
+
+.sun-and-moon .moon > circle {
+  transition: transform 0.25s cubic-bezier(0, 0, 0, 1);
+}
+
+[data-theme="dark"] .sun-and-moon .sun {
+  transform: scale(1.75);
+}
+
+[data-theme="dark"] .sun-and-moon .sun-beams {
+  opacity: 0;
+}
+
+[data-theme="dark"] .sun-and-moon .moon > circle {
+  transform: translateX(-7px);
+}
+
+@supports (cx: 1) {
+  .sun-and-moon .moon > circle {
+    transition: cx 0.25s var(--ease-out-5);
+  }
+  [data-theme="dark"] .sun-and-moon .moon > circle {
+    cx: 17;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sun-and-moon .sun {
+    transition: transform 0.5s var(--ease-elastic-3);
+  }
+  .sun-and-moon .sun-beams {
+    transition: transform 0.5s var(--ease-elastic-4), opacity 0.5s var(--ease-3);
+  }
+  .sun-and-moon .moon > circle {
+    transition: transform 0.25s var(--ease-out-5);
+  }
+  [data-theme="dark"] .sun-and-moon .sun {
+    transform: scale(1.75);
+  }
+  [data-theme="dark"] .sun-and-moon .sun-beams {
+    transform: rotateZ(-25deg);
+    opacity: 0;
+  }
+  [data-theme="dark"] .sun-and-moon .moon > circle {
+    transition-duration: 0.5s;
+    transition-delay: 0.25s;
+  }
+}
+
+/* Search bar styles */
+.search {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  transition: width 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.search.active {
+  width: 250px;
+}
+
+.search-bar {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--btn-color);
+  border-radius: 2rem;
+  outline: none;
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  padding: 0 2.5rem 0 1rem;
+  background-color: transparent;
+  color: hsl(var(--foreground));
+  opacity: 0;
+  transition: opacity 0.3s ease, width 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.search.active .search-bar {
+  opacity: 1;
+  width: 100%;
+}
+
+.search-bar::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.search-btn {
+  position: absolute;
+  right: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  background-color: var(--btn-color);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-icon {
+  color: hsl(var(--primary-foreground));
+  font-size: 1.25rem;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.search-glass,
+.search-close {
+  position: absolute;
+}
+
+.search:not(.active) .search-close,
+.search.active .search-glass {
+  opacity: 0;
+  transform: rotate(-90deg);
+}
+
+.search.active .search-close,
+.search:not(.active) .search-glass {
+  opacity: 1;
+  transform: rotate(0);
+}
+
+/* Animated Button CSS */
+.animated-button {
+  position: relative;
+  padding: 16px 32px;
+  border: none;
+  cursor: pointer;
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 20px;
+  letter-spacing: 2px;
+  background-color: var(--btn-color);
+  border-radius: 50px;
+  z-index: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: white;
+  box-shadow: 0 0 15px var(--btn-glow-color);
+}
+
+.animated-button::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, var(--btn-color), var(--btn-glow-color), var(--btn-color));
+  z-index: -1;
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.animated-button:hover::before {
+  opacity: 1;
+}
+
+.animated-button .button-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.animated-button .button-text {
+  color: white;
+}
+
+.animated-button .floating-images {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Updated Floating Image Styles: Vertical Movement, Increased Amplitude & Faster (3s) */
+.animated-button .floating-image {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
+  filter: brightness(0) invert(1);
+  animation: verticalFloat 3s ease-in-out infinite;
+}
+
+@keyframes verticalFloat {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animated-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px var(--btn-glow-color);
+}
+
+/* Small Shop Now Button - Updated to a Pill Shape with Glowing Shiny Text */
+.shop-now-small {
+  display: inline-block;
+  background-color: rgb(12, 0, 0);
+  padding: 9px 9px;
+  border-radius: 4px; /* Less rounded than before */
+  color: white;
+  font-size: 17x;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  text-decoration: none;
+  text-align: center;
+  width: 100%; /* Full width */
+}
+
+.shop-now-small:hover {
+  background-color: #333;
+  transform: scale(1.05);
+}
+
+/* Shiny Text Animation for Button Text */
+.shiny-text {
+  color: #ffffffa4;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  background-size: 150% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  display: inline-block;
+  animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 100%;
+  }
+  100% {
+    background-position: -100%;
+  }
+}
+
+.shiny-text.disabled {
+  animation: none;
 }

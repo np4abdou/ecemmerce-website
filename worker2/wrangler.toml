@@ -1,5 +1,5 @@
-name = "order-worker2025"
-main = "index.ts"
+name = "sales-analytics-worker"
+main = "worker.ts"
 compatibility_date = "2023-05-18"
 
 [observability.logs]

@@ -6,7 +6,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { Search, ChevronDown } from "lucide-react"
-import { products, categories } from "../data/products"
+import { products, categories } from "../config/products"
 import SEO from "../components/SEO"
 
 export default function SearchPage() {
@@ -53,8 +53,8 @@ export default function SearchPage() {
     <>
       <SEO
         title="Search Products"
-        description="Search for your favorite products at ASCEND"
-        keywords="search, products, ASCEND, fashion"
+        description="Search for your favorite products at Expert"
+        keywords="search, products, Expert, fashion"
       />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8 text-center">Search Products</h1>
@@ -104,7 +104,7 @@ export default function SearchPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {filteredProducts.map((product, index) => (
             <motion.div
               key={product.id}

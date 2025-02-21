@@ -1,17 +1,16 @@
 export const images = {
-    home: {
-      hero: "/images/home.png",
-    },
-    categories: {
-      wearArt: "/images/category-wear-art.jpg",
-      otaku: "/images/category-otaku.jpg",
-      gym: "/images/category-gym.jpg",
-      limited: "/images/category-limited.jpg",
-    },
-    products: {
-      placeholder: "/images/product-placeholder.jpg",
-    },
-    logo: "/images/logo.svg",
-  }
-  
-  
+  home: {
+    hero: "/images/home.png",
+  },
+  categories: {
+    totebags: "/images/tootebag.png",
+    hoodies: "/images/hoodie.png",
+    tshirts: "/images/shirt.png",
+    caps: "/images/cap.png",
+  },
+  products: {
+    placeholder: "/images/product-placeholder.jpg",
+  },
+  logo: "/images/logo.png",
+}
+

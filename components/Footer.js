@@ -1,82 +1,144 @@
-import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react"
+"use client"
+
+import { useState, useEffect } from "react"
+import { Facebook, Instagram, PhoneIcon, Mail, MapPin, Clock } from "lucide-react"
+import Image from "next/image"
+import { useTheme } from "next-themes"
+import Link from "next/link"
+import { motion } from "framer-motion"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // Ensure the component is mounted to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Footer links data
+  const footerLinks = [
+    { title: "About Us", href: "/about" },
+    { title: "FAQ", href: "/faq" },
+    { title: "Shipping Info", href: "/shipping" },
+    { title: "Returns Policy", href: "/returns" },
+  ]
+
+  // Contact information data
+  const contactItems = [
+    { icon: <PhoneIcon className="w-5 h-5" />, text: "+971 4 123 4567" },
+    { icon: <Mail className="w-5 h-5" />, text: "info@techemirate.ae" },
+    { icon: <MapPin className="w-5 h-5" />, text: "Dubai, UAE" },
+    { icon: <Clock className="w-5 h-5" />, text: "Mon-Fri: 9AM-6PM" },
+  ]
+
+  // Social media links data
+  const socialLinks = [
+    { icon: <Facebook className="w-5 h-5" />, href: "#" },
+    { icon: <Instagram className="w-5 h-5" />, href: "#" },
+    { icon: <PhoneIcon className="w-5 h-5" />, href: "#" }, // Using PhoneIcon for WhatsApp
+  ]
 
   return (
-    <footer className="bg-background text-foreground py-12 border-t border-border">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Store Info */}
-          <div>
-            <h3 className="text-xl font-bold mb-4">TechEmirate</h3>
-            <p className="text-muted-foreground">Your premium electronics destination in the UAE</p>
+    <footer className="bg-card text-foreground border-t border-border">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12">
+          {/* Brand Section */}
+          <div className="flex flex-col space-y-6">
+            <div className="flex items-center">
+              {mounted && (
+                <div className="relative w-[140px] h-[35px]">
+                  <Image
+                    src="/images/logo.png" // Use a single logo file
+                    alt="TechEmirate Logo"
+                    layout="fill"
+                    objectFit="contain"
+                    className={`hover:scale-105 transition-transform duration-300 ${
+                      resolvedTheme === "dark" ? "invert" : ""
+                    }`}
+                  />
+                </div>
+              )}
+            </div>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Elevating style through innovation. Your premier destination for curated tech fashion in the Middle East.
+            </p>
           </div>
 
-          {/* Contact Info */}
+          {/* Contact Information */}
           <div>
-            <h4 className="font-semibold mb-4">Contact Us</h4>
-            <ul className="space-y-2 text-muted-foreground">
-              <li>📞 +971 4 123 4567</li>
-              <li>📧 info@techemirate.ae</li>
-              <li>📍 Dubai, UAE</li>
-              <li>🕒 Mon-Fri: 9AM-6PM</li>
+            <h4 className="font-semibold text-lg mb-6">Contact Info</h4>
+            <ul className="space-y-4">
+              {contactItems.map((item, index) => (
+                <motion.li 
+                  key={index}
+                  whileHover={{ x: 5 }}
+                  className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <span className="text-primary">{item.icon}</span>
+                  <span className="text-sm">{item.text}</span>
+                </motion.li>
+              ))}
             </ul>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-muted-foreground">
-              <li>
-                <a href="/about" className="hover:text-primary">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="/faq" className="hover:text-primary">
-                  FAQ
-                </a>
-              </li>
-              <li>
-                <a href="/shipping" className="hover:text-primary">
-                  Shipping Info
-                </a>
-              </li>
-              <li>
-                <a href="/returns" className="hover:text-primary">
-                  Returns Policy
-                </a>
-              </li>
+            <h4 className="font-semibold text-lg mb-6">Quick Links</h4>
+            <ul className="space-y-4">
+              {footerLinks.map((link, index) => (
+                <motion.li 
+                  key={index}
+                  whileHover={{ x: 5 }}
+                >
+                  <Link
+                    href={link.href}
+                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
+                  >
+                    {link.title}
+                  </Link>
+                </motion.li>
+              ))}
             </ul>
           </div>
 
           {/* Social Media */}
           <div>
-            <h4 className="font-semibold mb-4">Follow Us</h4>
-            <div className="flex space-x-4">
-              <a href="#" className="text-muted-foreground hover:text-primary">
-                <Facebook className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
-                <Twitter className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
-                <Instagram className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
-                <Linkedin className="w-6 h-6" />
-              </a>
+            <h4 className="font-semibold text-lg mb-6">Connect With Us</h4>
+            <div className="flex space-x-3">
+              {socialLinks.map((social, index) => (
+                <motion.a
+                  key={index}
+                  href={social.href}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="p-3 rounded-lg bg-muted hover:bg-primary/10 transition-colors text-muted-foreground hover:text-primary"
+                >
+                  {social.icon}
+                </motion.a>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-          <p>© {currentYear} TechEmirate. All rights reserved.</p>
+        {/* Copyright Section */}
+        <div className="border-t border-border pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-muted-foreground">
+            <p className="text-sm text-center">
+              © {currentYear} TechEmirate. All rights reserved.
+            </p>
+            <div className="flex space-x-4">
+              <Link href="/privacy" className="text-sm hover:text-primary transition-colors">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="text-sm hover:text-primary transition-colors">
+                Terms of Service
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
   )
 }
-
