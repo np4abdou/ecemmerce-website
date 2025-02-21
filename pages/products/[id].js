@@ -1,12 +1,9 @@
-"use client"
 
-import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/router"
-import { ArrowLeft } from "lucide-react"
-import Link from "next/link"
 import Image from "next/image"
+import { ArrowLeft } from "lucide-react"
 import { products } from "../../config/products"
-import { images } from "../../config/images"
+import { useEffect, useRef, useState } from "react"
 
 export default function ProductDetail() {
   const router = useRouter()
@@ -78,18 +75,22 @@ export default function ProductDetail() {
     }
   }
 
+  const handleBack = () => {
+    router.push('/')
+  }
+
   const discountedPrice = discount.active ? Math.floor(product.price * (1 - discount.amount / 100)) : product.price
   const showSizes = !["totebags", "caps"].includes(product.category)
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <Link 
-        href="/products" 
+      <button 
+        onClick={handleBack}
         className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground mb-6 transition-colors"
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
-        Back to Products
-      </Link>
+        Back to Home
+      </button>
 
       <div className="grid md:grid-cols-2 gap-8">
         <div className="md:sticky md:top-24 h-fit space-y-4">
@@ -101,10 +102,9 @@ export default function ProductDetail() {
             onMouseMove={handleMouseMove}
           >
             <Image
-              src={currentImage || images.products.placeholder}
+              src={currentImage || "/images/product-placeholder.jpg"}
               alt={product.name}
-              layout="fill"
-              objectFit="cover"
+              fill
               className={`transition-transform duration-200 ${isZoomed ? "scale-150" : "scale-100"}`}
               style={
                 isZoomed ? { transformOrigin: `${mousePosition.x}% ${mousePosition.y}%` } : undefined
@@ -122,11 +122,11 @@ export default function ProductDetail() {
               <Image
                 src={product.mainImage}
                 alt={product.name}
-                layout="fill"
-                objectFit="cover"
+                fill
+                className="object-cover"
               />
             </button>
-            {product.alternativeImages.map((img, index) => (
+            {product.alternativeImages?.map((img, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentImage(img)}
@@ -137,8 +137,8 @@ export default function ProductDetail() {
                 <Image
                   src={img}
                   alt={`${product.name} view ${index + 1}`}
-                  layout="fill"
-                  objectFit="cover"
+                  fill
+                  className="object-cover"
                 />
               </button>
             ))}

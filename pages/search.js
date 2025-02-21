@@ -1,149 +1,234 @@
-"use client"
-
-import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import Image from "next/image"
-import { motion } from "framer-motion"
-import { Search, ChevronDown } from "lucide-react"
-import { products, categories } from "../config/products"
+import { motion, AnimatePresence } from "framer-motion"
+import { Search, Filter, X } from "lucide-react"
+import { products, categories, themes } from "../config/products"
 import SEO from "../components/SEO"
+import { useState, useEffect } from "react"
 
 export default function SearchPage() {
   const router = useRouter()
-  const { query } = router.query
+  const { query, category: initialCategory, theme: initialTheme } = router.query
   const [searchTerm, setSearchTerm] = useState(query || "")
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const [sortBy, setSortBy] = useState("relevance")
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory || "all")
+  const [selectedTheme, setSelectedTheme] = useState(initialTheme || "all")
+  const [priceRange, setPriceRange] = useState([0, 300])
+  const [showFilters, setShowFilters] = useState(false)
   const [filteredProducts, setFilteredProducts] = useState([])
 
   useEffect(() => {
-    if (query) {
-      setSearchTerm(query)
-    }
-  }, [query])
+    if (query) setSearchTerm(query)
+    if (initialCategory) setSelectedCategory(initialCategory)
+    if (initialTheme) setSelectedTheme(initialTheme)
+  }, [query, initialCategory, initialTheme])
 
   useEffect(() => {
     const filtered = products.filter(
       (product) =>
         (selectedCategory === "all" || product.category === selectedCategory) &&
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        (selectedTheme === "all" || product.theme === selectedTheme) &&
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        product.price >= priceRange[0] &&
+        product.price <= priceRange[1]
     )
+    setFilteredProducts(filtered)
+  }, [searchTerm, selectedCategory, selectedTheme, priceRange])
 
-    const sorted = [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case "price-low":
-          return a.price - b.price
-        case "price-high":
-          return b.price - a.price
-        default:
-          return 0
-      }
-    })
-
-    setFilteredProducts(sorted)
-  }, [searchTerm, selectedCategory, sortBy])
-
-  const handleSearch = (e) => {
-    e.preventDefault()
-    router.push(`/search?query=${searchTerm}`)
+  const handleReset = () => {
+    setSearchTerm("")
+    setSelectedCategory("all")
+    setSelectedTheme("all")
+    setPriceRange([0, 1000])
+    router.push("/search")
   }
 
   return (
     <>
       <SEO
         title="Search Products"
-        description="Search for your favorite products at Expert"
-        keywords="search, products, Expert, fashion"
+        description="Search for your favorite products"
+        keywords="search, products, fashion"
       />
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-center">Search Products</h1>
-
-        <form onSubmit={handleSearch} className="mb-8">
-          <div className="relative max-w-2xl mx-auto">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search products..."
-              className="w-full p-4 pr-12 rounded-full bg-accent text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-            <button type="submit" className="absolute right-4 top-1/2 transform -translate-y-1/2">
-              <Search className="h-6 w-6 text-muted-foreground" />
-            </button>
-          </div>
-        </form>
-
-        <div className="flex flex-wrap gap-4 mb-8">
-          <div className="relative">
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="appearance-none bg-accent text-foreground px-4 py-2 pr-8 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Sidebar Filters */}
+            <motion.aside
+              initial={{ x: -100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              className={`lg:w-64 bg-card rounded-xl p-6 h-fit sticky top-24 border border-border shadow-lg ${
+                showFilters ? "block" : "hidden lg:block"
+              }`}
             >
-              <option value="all">All Categories</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none w-5 h-5" />
-          </div>
-          <div className="relative">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="appearance-none bg-accent text-foreground px-4 py-2 pr-8 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-            >
-              <option value="relevance">Sort by: Relevance</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-            </select>
-            <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none w-5 h-5" />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {filteredProducts.map((product, index) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-            >
-              <Link
-                href={`/products/${product.id}`}
-                className="group block bg-card text-card-foreground rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
-              >
-                <div className="relative aspect-square overflow-hidden">
-                  <Image
-                    src={product.image || "/placeholder.svg"}
-                    alt={product.name}
-                    layout="fill"
-                    objectFit="cover"
-                    className="transition-transform duration-500 group-hover:scale-110"
-                  />
+              <div className="space-y-8">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-semibold text-card-foreground">Filters</h3>
+                  <button
+                    onClick={handleReset}
+                    className="text-sm text-primary hover:text-primary/80 transition-colors"
+                  >
+                    Reset All
+                  </button>
                 </div>
-                <div className="p-6">
-                  <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
-                  <p className="text-muted-foreground mb-4">{product.description}</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-primary">{product.price.toLocaleString()} DHs</span>
+
+                <div>
+                  <h4 className="text-base font-medium mb-4 text-card-foreground">Categories</h4>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedCategory === "all"}
+                        onChange={() => setSelectedCategory("all")}
+                        className="w-4 h-4 rounded border-input accent-primary"
+                      />
+                      <span className="text-card-foreground">All Products</span>
+                    </label>
+                    {categories.map((category) => (
+                      <label key={category.id} className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={selectedCategory === category.id}
+                          onChange={() => setSelectedCategory(category.id)}
+                          className="w-4 h-4 rounded border-input accent-primary"
+                        />
+                        <span className="text-card-foreground">{category.name}</span>
+                      </label>
+                    ))}
                   </div>
                 </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
 
-        {filteredProducts.length === 0 && (
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-xl mt-8">
-            No products found. Try a different search term or category.
-          </motion.p>
-        )}
+                <div>
+                  <h4 className="text-base font-medium mb-4 text-card-foreground">Themes</h4>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedTheme === "all"}
+                        onChange={() => setSelectedTheme("all")}
+                        className="w-4 h-4 rounded border-input accent-primary"
+                      />
+                      <span className="text-card-foreground">All Themes</span>
+                    </label>
+                    {themes.map((theme) => (
+                      <label key={theme.id} className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={selectedTheme === theme.id}
+                          onChange={() => setSelectedTheme(theme.id)}
+                          className="w-4 h-4 rounded border-input accent-primary"
+                        />
+                        <span className="text-card-foreground">{theme.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-base font-medium mb-4 text-card-foreground">Price Range</h4>
+                  <div className="space-y-4">
+                    <input
+                      type="range"
+                      min="0"
+                      max="300"
+                      value={priceRange[1]}
+                      onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                      className="w-full accent-primary"
+                    />
+                    <div className="flex justify-between items-center">
+                      <div className="bg-card border border-input rounded-lg px-3 py-1">
+                        <span className="text-sm text-card-foreground">{priceRange[0]} DHs</span>
+                      </div>
+                      <span className="text-muted-foreground">-</span>
+                      <div className="bg-card border border-input rounded-lg px-3 py-1">
+                        <span className="text-sm text-card-foreground">{priceRange[1]} DHs</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.aside>
+
+            {/* Main Content */}
+            <div className="flex-1">
+              <form className="max-w-2xl mx-auto mb-8">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search products..."
+                    className="w-full p-4 pr-12 rounded-full bg-card border border-input text-card-foreground focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="lg:hidden absolute right-16 top-1/2 transform -translate-y-1/2"
+                  >
+                    <Filter className="h-5 w-5 text-muted-foreground hover:text-primary transition-colors" />
+                  </button>
+                  <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-primary" />
+                </div>
+              </form>
+
+              <AnimatePresence mode="popLayout">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredProducts.map((product, index) => (
+                    <motion.div
+                      key={product.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                    >
+                      <Link
+                        href={`/products/${product.id}`}
+                        className="group block rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl bg-card border border-border"
+                      >
+                        <div className="relative aspect-square overflow-hidden">
+                          <Image
+                            src={product.mainImage}
+                            alt={product.name}
+                            width={400}
+                            height={400}
+                            className="object-cover transition-transform duration-500 group-hover:scale-110"
+                          />
+                        </div>
+                        <div className="p-4">
+                          <h2 className="text-lg font-semibold text-card-foreground">
+                            {product.name}
+                          </h2>
+                          <div className="mt-2">
+                            <span className="text-xl font-bold text-primary">
+                              {product.price.toLocaleString()} DHs
+                            </span>
+                          </div>
+                          <div className="mt-2">
+                            <span className="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary">
+                              {themes.find((t) => t.id === product.theme)?.name}
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              </AnimatePresence>
+
+              {filteredProducts.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-16"
+                >
+                  <p className="text-2xl font-semibold text-muted-foreground">No products found</p>
+                  <p className="text-muted-foreground mt-2">Try adjusting your search or filters</p>
+                </motion.div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </>
   )
 }
-
