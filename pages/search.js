@@ -1,8 +1,10 @@
+"use client"
+
 import { useRouter } from "next/router"
 import Link from "next/link"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Filter, X } from "lucide-react"
+import { Search, Filter } from "lucide-react"
 import { products, categories, themes } from "../config/products"
 import SEO from "../components/SEO"
 import { useState, useEffect } from "react"
@@ -30,7 +32,7 @@ export default function SearchPage() {
         (selectedTheme === "all" || product.theme === selectedTheme) &&
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
         product.price >= priceRange[0] &&
-        product.price <= priceRange[1]
+        product.price <= priceRange[1],
     )
     setFilteredProducts(filtered)
   }, [searchTerm, selectedCategory, selectedTheme, priceRange])
@@ -132,7 +134,7 @@ export default function SearchPage() {
                       min="0"
                       max="300"
                       value={priceRange[1]}
-                      onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                      onChange={(e) => setPriceRange([priceRange[0], Number.parseInt(e.target.value)])}
                       className="w-full accent-primary"
                     />
                     <div className="flex justify-between items-center">
@@ -195,13 +197,9 @@ export default function SearchPage() {
                           />
                         </div>
                         <div className="p-4">
-                          <h2 className="text-lg font-semibold text-card-foreground">
-                            {product.name}
-                          </h2>
+                          <h2 className="text-lg font-semibold text-card-foreground">{product.name}</h2>
                           <div className="mt-2">
-                            <span className="text-xl font-bold text-primary">
-                              {product.price.toLocaleString()} DHs
-                            </span>
+                            <span className="text-xl font-bold text-primary">{product.price.toLocaleString()} DHs</span>
                           </div>
                           <div className="mt-2">
                             <span className="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary">
@@ -216,11 +214,7 @@ export default function SearchPage() {
               </AnimatePresence>
 
               {filteredProducts.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-16"
-                >
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
                   <p className="text-2xl font-semibold text-muted-foreground">No products found</p>
                   <p className="text-muted-foreground mt-2">Try adjusting your search or filters</p>
                 </motion.div>
@@ -232,3 +226,4 @@ export default function SearchPage() {
     </>
   )
 }
+

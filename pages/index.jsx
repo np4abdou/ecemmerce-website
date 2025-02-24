@@ -35,10 +35,10 @@ export default function Home() {
   const newArrivals = products.slice(0, 4)
 
   const categories = [
-    { name: "Tote Bags", image: images.categories.totebags, link: "/totebags" },
-    { name: "Hoodies", image: images.categories.hoodies, link: "/hoodies" },
-    { name: "T-Shirts", image: images.categories.tshirts, link: "/tshirts" },
-    { name: "Caps", image: images.categories.caps, link: "/caps" },
+    { name: "Tote Bags", image: images.categoryIcons.totebags, id: "totebags" },
+    { name: "Hoodies", image: images.categoryIcons.hoodies, id: "hoodies" },
+    { name: "T-Shirts", image: images.categoryIcons.tshirts, id: "tshirts" },
+    { name: "Caps", image: images.categoryIcons.caps, id: "caps" },
   ]
 
   return (
@@ -138,10 +138,10 @@ export default function Home() {
         {/* Categories Section */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center mb-12 text-theme">Shop by Category</h2>
+            <h2 className="text-4xl font-bold text-center mb-12 text-theme">Products collections</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {categories.map((category, index) => (
-                <Link href={category.link} key={index} className="group block">
+                <Link href={`/search?category=${category.id}`} key={index} className="group block">
                   <div className="relative w-40 h-40 mx-auto rounded-full overflow-hidden transition-transform duration-300 transform group-hover:scale-105">
                     <Image
                       src={category.image || "/placeholder.svg"}
@@ -194,9 +194,7 @@ export default function Home() {
                         loading="lazy"
                       />
                       <div className="absolute top-4 left-4">
-                        <span className="bg-black text-white px-3 py-1 text-sm font-semibold rounded">
-                          NEW
-                        </span>
+                        <span className="bg-black text-white px-3 py-1 text-sm font-semibold rounded">NEW</span>
                       </div>
                       {discount.active && (
                         <div className="absolute top-4 right-4">
@@ -212,19 +210,14 @@ export default function Home() {
                     <p className="text-xl font-bold text-primary mb-4">
                       {discount.active ? (
                         <>
-                          <span className="line-through text-muted-foreground mr-2">
-                            {product.price} DHs
-                          </span>
+                          <span className="line-through text-muted-foreground mr-2">{product.price} DHs</span>
                           {(product.price * (1 - discount.amount / 100)).toFixed(2)} DHs
                         </>
                       ) : (
                         `${product.price} DHs`
                       )}
                     </p>
-                    <Link
-                      href={`/products/${product.id}`}
-                      className="shop-now-small"
-                    >
+                    <Link href={`/products/${product.id}`} className="shop-now-small">
                       <span className="shiny-text">Shop now</span>
                     </Link>
                   </div>
@@ -237,3 +230,4 @@ export default function Home() {
     </>
   )
 }
+

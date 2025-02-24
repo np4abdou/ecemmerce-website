@@ -1,3 +1,5 @@
+"use client"
+
 import { useRef, useEffect, useState } from "react"
 import { useSprings, animated } from "@react-spring/web"
 
@@ -41,7 +43,7 @@ const BlurText = ({
           observer.unobserve(ref.current)
         }
       },
-      { threshold, rootMargin }
+      { threshold, rootMargin },
     )
 
     observer.observe(ref.current)
@@ -55,7 +57,7 @@ const BlurText = ({
       from: animationFrom || defaultFrom,
       to: inView
         ? async (next) => {
-            for (const step of (animationTo || defaultTo)) {
+            for (const step of animationTo || defaultTo) {
               await next(step)
             }
             animatedCount.current += 1
@@ -66,7 +68,7 @@ const BlurText = ({
         : animationFrom || defaultFrom,
       delay: i * delay,
       config: { easing },
-    }))
+    })),
   )
 
   return (
@@ -89,3 +91,4 @@ const BlurText = ({
 }
 
 export default BlurText
+

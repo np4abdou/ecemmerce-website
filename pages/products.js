@@ -1,4 +1,3 @@
-
 import Link from "next/link"
 import { categories } from "../config/products"
 import { images } from "../config/images"
@@ -38,3 +37,4 @@ export default function Categories() {
     </div>
   )
 }
+

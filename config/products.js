@@ -1,4 +1,3 @@
-
 export const products = [
   {
     id: 1,
@@ -70,3 +69,4 @@ export const themes = [
   { id: "rap", name: "Rap" },
   { id: "art", name: "Art" },
 ]
+

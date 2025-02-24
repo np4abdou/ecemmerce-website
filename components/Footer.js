@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Facebook, Instagram, PhoneIcon, Mail, MapPin, Clock } from 'lucide-react'
+import { Facebook, Instagram, PhoneIcon, Mail, MapPin, Clock } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -117,7 +117,7 @@ export default function Footer() {
         {/* Copyright Section */}
         <div className="border-t border-border pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-muted-foreground">
-            <p className="text-sm text-center">© {currentYear} TechEmirate. All rights reserved.</p>
+            <p className="text-sm text-center">© {currentYear} Expert. All rights reserved.</p>
             <div className="flex space-x-4">
               <Link href="/privacy" className="text-sm hover:text-primary transition-colors">
                 Privacy Policy
@@ -132,3 +132,4 @@ export default function Footer() {
     </footer>
   )
 }
+

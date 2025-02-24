@@ -1,3 +1,4 @@
+"use client"
 
 import { useRouter } from "next/router"
 import Image from "next/image"
@@ -76,7 +77,7 @@ export default function ProductDetail() {
   }
 
   const handleBack = () => {
-    router.push('/')
+    router.push("/")
   }
 
   const discountedPrice = discount.active ? Math.floor(product.price * (1 - discount.amount / 100)) : product.price
@@ -84,7 +85,7 @@ export default function ProductDetail() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <button 
+      <button
         onClick={handleBack}
         className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground mb-6 transition-colors"
       >
@@ -106,40 +107,32 @@ export default function ProductDetail() {
               alt={product.name}
               fill
               className={`transition-transform duration-200 ${isZoomed ? "scale-150" : "scale-100"}`}
-              style={
-                isZoomed ? { transformOrigin: `${mousePosition.x}% ${mousePosition.y}%` } : undefined
-              }
+              style={isZoomed ? { transformOrigin: `${mousePosition.x}% ${mousePosition.y}%` } : undefined}
             />
           </div>
-          
+
           <div className="flex gap-2 justify-center">
             <button
               onClick={() => setCurrentImage(product.mainImage)}
               className={`relative w-20 h-20 rounded-md border overflow-hidden ${
-                currentImage === product.mainImage ? 'border-primary ring-2 ring-primary ring-offset-2' : 'border-border hover:border-primary'
+                currentImage === product.mainImage
+                  ? "border-primary ring-2 ring-primary ring-offset-2"
+                  : "border-border hover:border-primary"
               }`}
             >
-              <Image
-                src={product.mainImage}
-                alt={product.name}
-                fill
-                className="object-cover"
-              />
+              <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
             </button>
             {product.alternativeImages?.map((img, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentImage(img)}
                 className={`relative w-20 h-20 rounded-md border overflow-hidden ${
-                  currentImage === img ? 'border-primary ring-2 ring-primary ring-offset-2' : 'border-border hover:border-primary'
+                  currentImage === img
+                    ? "border-primary ring-2 ring-primary ring-offset-2"
+                    : "border-border hover:border-primary"
                 }`}
               >
-                <Image
-                  src={img}
-                  alt={`${product.name} view ${index + 1}`}
-                  fill
-                  className="object-cover"
-                />
+                <Image src={img} alt={`${product.name} view ${index + 1}`} fill className="object-cover" />
               </button>
             ))}
           </div>
@@ -148,11 +141,9 @@ export default function ProductDetail() {
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-            <p className="text-2xl font-bold" style={{ color: '#f59a38' }}>
+            <p className="text-2xl font-bold" style={{ color: "#f59a38" }}>
               {discount.active && (
-                <span className="line-through text-muted-foreground mr-2 text-xl">
-                  {product.price} DHs
-                </span>
+                <span className="line-through text-muted-foreground mr-2 text-xl">{product.price} DHs</span>
               )}
               {discountedPrice} DHs
             </p>
@@ -169,8 +160,8 @@ export default function ProductDetail() {
                     onClick={() => setSelectedSize(size)}
                     className={`px-4 py-2 rounded-md border ${
                       selectedSize === size
-                        ? 'border-primary bg-primary text-primary-foreground'
-                        : 'border-border hover:border-primary'
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border hover:border-primary"
                     }`}
                   >
                     {size}
@@ -220,13 +211,7 @@ export default function ProductDetail() {
           {showSizes && (
             <div className="mt-6 p-4 border border-border rounded-lg bg-card">
               <h3 className="text-lg font-medium mb-2">Size Guide</h3>
-              <Image
-                src="/images/size.png"
-                alt="Size Guide"
-                width={300}
-                height={150}
-                className="mx-auto"
-              />
+              <Image src="/images/size.png" alt="Size Guide" width={300} height={150} className="mx-auto" />
             </div>
           )}
         </div>
@@ -234,3 +219,4 @@ export default function ProductDetail() {
     </div>
   )
 }
+

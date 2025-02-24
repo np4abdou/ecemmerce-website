@@ -1,115 +1,96 @@
-import type { ExecutionContext } from "@cloudflare/workers-types"
+import { ExecutionContext } from "@cloudflare/workers-types";
 
+// Define the environment with the D1 database
 interface Env {
-  DB: D1Database
+  DB: D1Database;
 }
 
+// Define the interface for the POST request body
 interface SaleRequest {
-  productId: number
-  sellDate: string
+  productId: number;
+  sellDate: string;
 }
 
+// Define the response structure for GET requests
 interface SaleResponse {
-  id: number
-  product_id: number
-  sell_date: string
-}
-
-interface ErrorResponse {
-  error: string
-  details?: string
+  id: number;
+  product_id: number;
+  sell_date: string;
 }
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  // The main fetch handler for all incoming requests
+  async fetch(request: Request, env: Env, ctx: ExecutionContext) {
+    // CORS headers for allowing cross-origin requests
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
-      "Access-Control-Max-Age": "86400",
-    }
+      "Access-Control-Allow-Headers": "Content-Type",
+    };
 
-    // Handle CORS preflight
+    // Handle CORS preflight (OPTIONS method)
     if (request.method === "OPTIONS") {
-      return new Response(null, { headers: corsHeaders })
+      return new Response(null, { headers: corsHeaders });
     }
 
-    try {
-      if (request.method === "POST") {
-        const data: SaleRequest = await request.json()
+    // Handle POST requests to add a new sale
+    if (request.method === "POST") {
+      try {
+        const data: SaleRequest = await request.json();
 
-        // Validate request data
-        if (!data.productId || !data.sellDate) {
-          return new Response(
-            JSON.stringify({
-              error: "Missing required fields",
-              details: "productId and sellDate are required",
-            }),
-            {
-              status: 400,
-              headers: { ...corsHeaders, "Content-Type": "application/json" },
-            },
-          )
+        // Validate the incoming data (ensure productId and sellDate are provided)
+        if (typeof data.productId === 'undefined' || typeof data.sellDate === 'undefined') {
+          return new Response(JSON.stringify({ error: "Missing required fields" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json", ...corsHeaders },
+          });
         }
 
-        // Validate date format
-        if (!isValidDate(data.sellDate)) {
-          return new Response(
-            JSON.stringify({
-              error: "Invalid date format",
-              details: "sellDate must be a valid ISO date string",
-            }),
-            {
-              status: 400,
-              headers: { ...corsHeaders, "Content-Type": "application/json" },
-            },
-          )
-        }
+        // Insert the sale into the database
+        await env.DB.prepare(
+          "INSERT INTO sales (product_id, sell_date) VALUES (?, ?)"
+        ).bind(data.productId, data.sellDate).run();
 
-        // Insert sale record
-        const result = await env.DB.prepare("INSERT INTO sales (product_id, sell_date) VALUES (?, ?) RETURNING *")
-          .bind(data.productId, data.sellDate)
-          .first<SaleResponse>()
-
-        return new Response(JSON.stringify({ success: true, data: result }), {
+        // Return a success response
+        return new Response(JSON.stringify({ success: true }), {
           status: 200,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        })
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      } catch (err) {
+        // Error handling for invalid data or database issues
+        return new Response(JSON.stringify({ 
+          error: "Invalid request format",
+          details: err instanceof Error ? err.message : String(err)
+        }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
       }
+    }
 
-      if (request.method === "GET") {
+    // Handle GET requests to fetch sales data
+    if (request.method === "GET") {
+      try {
+        // Query the sales data from the database
         const sales = await env.DB.prepare(
-          "SELECT id, product_id, sell_date FROM sales ORDER BY sell_date DESC",
-        ).all<SaleResponse>()
+          "SELECT id, product_id, sell_date FROM sales ORDER BY sell_date DESC"
+        ).all();
 
+        // Return the sales data as a JSON response
         return new Response(JSON.stringify(sales.results), {
           status: 200,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        })
-      }
-
-      return new Response(JSON.stringify({ error: "Method not allowed" }), {
-        status: 405,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      })
-    } catch (err) {
-      console.error("Worker error:", err)
-      return new Response(
-        JSON.stringify({
-          error: "Internal server error",
-          details: err instanceof Error ? err.message : "Unknown error occurred",
-        }),
-        {
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      } catch (err) {
+        // Handle any errors that occur during the GET request
+        return new Response(JSON.stringify({ error: "Failed to fetch sales" }), {
           status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        },
-      )
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
     }
+
+    // If the method is not supported (neither GET nor POST), return a 405 error
+    return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
   },
-}
-
-function isValidDate(dateString: string): boolean {
-  const date = new Date(dateString)
-  return date instanceof Date && !isNaN(date.getTime())
-}
-
+};
