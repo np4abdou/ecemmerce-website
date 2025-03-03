@@ -473,3 +473,103 @@
   @apply text-foreground;
 }
 
+/* Responsive layout adjustments */
+@media (min-width: 768px) {
+  body {
+    padding-bottom: 0;
+    padding-top: 4rem; /* Adjust this value based on your desktop header height */
+  }
+}
+
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 4rem; /* Adjust this value based on your mobile navigation height */
+    padding-top: 3.5rem; /* Adjust this value based on your mobile header height */
+  }
+}
+
+/* Ensure content doesn't overlap with fixed header */
+.content-wrapper {
+  padding-top: 1rem;
+}
+
+@media (min-width: 768px) {
+  .content-wrapper {
+    padding-top: 2rem;
+  }
+}
+
+/* Mobile-specific styles */
+@media (max-width: 767px) {
+  .search-modal-open {
+    padding-top: 7rem; /* Adjusted for header + search modal height */
+  }
+}
+
+/* Ensure square aspect ratio for product/art items on mobile */
+@media (max-width: 767px) {
+  .category-item,
+  .theme-item {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+/* Update the main content padding */
+main {
+  @apply -mt-9 md:-mt-9; /* Negative margin to pull content up */
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 767px) {
+  .mobile-header {
+    height: 3rem;
+  }
+
+  main {
+    @apply -mt-8; /* More negative margin for mobile */
+  }
+}
+
+/* Update header container height */
+.header-container {
+  @apply fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border h-10 md:h-12; /* Reduced header height */
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  /* Reverse margins and paddings where needed */
+  .rtl-flip {
+    transform: scaleX(-1);
+  }
+
+  /* Adjust text alignment */
+  .text-left {
+    text-align: right;
+  }
+
+  .text-right {
+    text-align: left;
+  }
+
+  /* Adjust margins */
+  .ml-auto {
+    margin-left: unset;
+    margin-right: auto;
+  }
+
+  .mr-auto {
+    margin-right: unset;
+    margin-left: auto;
+  }
+
+  /* Adjust search icon position */
+  .search-bar {
+    padding: 0 1rem 0 2.5rem;
+  }
+
+  .search-btn {
+    right: unset;
+    left: 0;
+  }
+}
+

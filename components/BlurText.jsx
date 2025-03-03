@@ -7,8 +7,8 @@ const BlurText = ({
   text = "",
   delay = 200,
   className = "",
-  animateBy = "words", // 'words' or 'letters'
-  direction = "top", // 'top' or 'bottom'
+  animateBy = "words",
+  direction = "top",
   threshold = 0.1,
   rootMargin = "0px",
   animationFrom,
@@ -18,7 +18,7 @@ const BlurText = ({
 }) => {
   const elements = animateBy === "words" ? text.split(" ") : text.split("")
   const [inView, setInView] = useState(false)
-  const ref = useRef()
+  const ref = useRef(null)
   const animatedCount = useRef(0)
 
   const defaultFrom =
@@ -36,19 +36,31 @@ const BlurText = ({
   ]
 
   useEffect(() => {
+    if (!ref.current) return // Add early return if ref is not available
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setInView(true)
-          observer.unobserve(ref.current)
+          if (ref.current) {
+            // Check if ref.current exists before unobserving
+            observer.unobserve(ref.current)
+          }
         }
       },
       { threshold, rootMargin },
     )
 
-    observer.observe(ref.current)
+    const currentRef = ref.current // Store ref.current in a variable
+    if (currentRef) {
+      observer.observe(currentRef)
+    }
 
-    return () => observer.disconnect()
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef)
+      }
+    }
   }, [threshold, rootMargin])
 
   const springs = useSprings(

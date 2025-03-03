@@ -9,10 +9,10 @@ export const images = {
     caps: "/images/cap.png",
   },
   categoryIcons: {
-    totebags: "/images/icons/totebag-icon.png",
-    hoodies: "/images/icons/hoodie-icon.png",
-    tshirts: "/images/icons/tshirt-icon.png",
-    caps: "/images/icons/cap-icon.png",
+    totebags: "/images/tootebag-icon.jpg",
+    hoodies: "/images/hoodie-icon.jpg",
+    tshirts: "/images/shirt-icon.png",
+    caps: "/images/cap-icon.png",
   },
   products: {
     placeholder: "/images/product-placeholder.jpg",
